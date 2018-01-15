@@ -255,7 +255,7 @@ function! project#config#choices(ArgLead, CmdLine, CursorPos) abort
 endfunction
 
 function! s:escape(path) abort
-  return !exists('+shellslash') || &shellslash ? fnameescape(a:path) : escape(a:path, '\')
+  return fnameescape(a:path)
 endfunction
 
 function! s:set_cursor() abort
