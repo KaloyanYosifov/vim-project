@@ -69,7 +69,7 @@ endif
 
 if get(g:, 'project_enable_welcome', 1)
   au VimEnter *
-        \ if !argc() && (line2byte('$') == -1) && (v:progname =~? '^[gm]\=vim\%[\.exe]$') |
+        \ if !argc() && (line2byte('$') == -1) |
         \   call project#config#welcome() |
         \ endif
 endif
