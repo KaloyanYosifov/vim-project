@@ -31,6 +31,12 @@ command! -nargs=1 -bang -complete=custom,project#config#choices TabProject
 command! -nargs=0 -bar TabWelcome
 \ tabe | call project#config#welcome()
 
+command! -nargs=0 -bar LockProjectDirectory
+\ call project#config#set_directory_lock(1)
+
+command! -nargs=0 -bar UnlockProjectDirectory
+\ call project#config#set_directory_lock(0)
+
 if (has("gui_running") && get(g:, 'project_enable_tab_title_gui', 1)) ||
 \ (!has("gui_running") && get(g:, 'project_enable_tab_title_term'))
   function! TabTitle()

@@ -24,9 +24,15 @@ function! project#config#project(type, arg, ...) abort
   if !isdirectory(project)
     return
   endif
-  let s:projects[title] = { "type": a:type, "event": event, "project": project, "title": title, "callbacks": [], "pos": s:pos}
+  let s:projects[title] = { "type": a:type, "event": event, "project": project, "title": title, "callbacks": [], "pos": s:pos, "lcd_locked": 0 }
   let s:pos += 1
   call s:setup()
+endfunction
+
+function! project#config#set_directory_lock(lock) abort
+    if exists("b:title")
+        let s:projects[b:title]["lcd_locked"] = a:lock
+    endif
 endfunction
 
 function! project#config#callback(title, callback) abort
@@ -276,6 +282,12 @@ endfunction
 
 function! s:sort(d1, d2) abort
   return a:d1["pos"] - a:d2["pos"]
+endfunction
+
+function! s:lcd(title) abort
+    if ! s:projects[a:title]["lcd_locked"]
+        execute "lcd " . s:projects[a:title]["project"]
+    endif
 endfunction
 
 function! s:setup() abort
