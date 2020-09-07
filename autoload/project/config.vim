@@ -291,6 +291,29 @@ function! s:lcd(title) abort
 endfunction
 
 function! s:setup() abort
+    augroup vim_project
+        autocmd!
+        let projects = sort(values(s:projects), "s:sort")
+        for v in projects
+          if v["type"] ==# "project"
+            let autocmd = "autocmd BufEnter ".s:back_to_slash(v["event"])." lcd ".v["project"]." | let b:title = \"".v["title"]."\" | call s:callback(\"".v["title"]."\")"
+          else
+            let autocmd = "autocmd BufEnter ".s:back_to_slash(v["event"])." let b:title = \"".v["title"]."\" | call s:callback(\"".v["title"]."\")"
+          endif
+          execute autocmd
+        endfor
+        if has("gui_running") && get(g:, 'project_enable_tab_title_gui', 1)
+          au BufEnter,BufRead,WinEnter * call TabTitle()
+        endif
+        if !has("gui_running") && get(g:, 'project_enable_tab_title_term')
+          au BufEnter,BufRead,WinEnter * call TabTitle()
+          " Force refresh of tabline when switching/closing windows
+          au WinEnter * call project#utils#refresh()
+        endif
+        if has("gui_running") && get(g:, 'project_enable_win_title', 1)
+          au BufEnter,BufRead,WinEnter * let &titlestring = getcwd()
+        endif
+    augroup END
 endfunction
 
 function! s:back_to_slash(string) abort
